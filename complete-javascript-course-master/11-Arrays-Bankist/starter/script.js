@@ -6,16 +6,16 @@
 
 // Data
 const account1 = {
-  owner: 'Jonas Schmedtmann',
+  owner: 'Mahendra Rajput',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
-  interestRate: 1.5,
+  owner: 'Ashwini Rajput',
+  movements: [50000, 34000, -150, -790, -3210, -1000, 85000, -30],
+  interestRate: 6.5,
   pin: 2222,
 };
 
@@ -71,7 +71,7 @@ const displayMovements = function (movements) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${movement}€</div>
+        <div class="movements__value">${movement}₹</div>
       </div>
     `;
 
@@ -79,14 +79,35 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
-
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, movement) => acc + movement, 0);
-  labelBalance.textContent = `${balance} EUR`;
+const calcDisplayBalance = function (account) {
+  account.balance = account.movements.reduce(
+    (acc, movement) => acc + movement,
+    0
+  );
+  labelBalance.textContent = `${account.balance}₹`;
 };
 
-calcDisplayBalance(account1.movements);
+const calcDisplaySummary = function (account) {
+  const incomes = account.movements
+    .filter(move => move > 0)
+    .reduce((acc, move) => acc + move, 0);
+
+  labelSumIn.textContent = `${incomes}₹`;
+
+  const outgoings = account.movements
+    .filter(move => move < 0)
+    .reduce((acc, move) => acc + move, 0);
+
+  labelSumOut.textContent = `${Math.abs(outgoings)}₹`;
+
+  const interest = account.movements
+    .filter(move => move > 0)
+    .map(deposit => (deposit * account.interestRate) / 100)
+    .filter(int => int >= 1)
+    .reduce((acc, int) => acc + int, 0);
+
+  labelSumInterest.textContent = `${interest}₹`;
+};
 
 const createUsernames = function (accounts) {
   accounts.forEach(account => {
@@ -101,6 +122,100 @@ const createUsernames = function (accounts) {
 createUsernames(accounts);
 console.log(accounts);
 
+const updateUI = function (account) {
+  // Display Movements
+  displayMovements(account.movements);
+
+  // Display Balance
+  calcDisplayBalance(account);
+
+  // Display Summary
+  calcDisplaySummary(account);
+};
+
+//Login Button event handler
+let currentAccount;
+btnLogin.addEventListener('click', e => {
+  //prevent default
+  e.preventDefault();
+  currentAccount = accounts.find(
+    account => account?.username === inputLoginUsername.value
+  );
+
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and Message
+    labelWelcome.textContent = `Welcome Back! ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+
+    containerApp.style.opacity = 100;
+
+    // Clear input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
+
+btnTransfer.addEventListener('click', e => {
+  // to prevent default re-loading
+  e.preventDefault();
+
+  //
+
+  const amount = Number(inputTransferAmount.value);
+  console.log(amount);
+
+  const receiverAccount = accounts.find(
+    account => account.username === inputTransferTo.value
+  );
+
+  // Clear input fields
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (
+    amount > 0 &&
+    receiverAccount &&
+    currentAccount.balance >= amount &&
+    receiverAccount?.username !== currentAccount.username
+  ) {
+    receiverAccount.movements.push(amount);
+    currentAccount.movements.push(-amount);
+    console.log('Transfer Valid');
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
+
+
+// Event handler for close account button
+btnClose.addEventListener('click', e => {
+  // Prevent Default Reloading
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      account => account.username === currentAccount.username
+    );
+
+    accounts.splice(index, 1);
+    containerApp.style.opacity = 0;
+
+  } else {
+    console.log(
+      'Invalid Credentials... Please Provide the correct username and pin.'
+    );
+  }
+  inputClosePin.value = inputCloseUsername.value = '';
+});
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -324,8 +439,8 @@ const movementsDescription = movements.map(
 
 console.log(movementsDescription);
 */
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 /*
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 // FILTER METHOD: - this filters the array, and returns the filtered array only.
 
 const deposit = movements.filter(movement => {
@@ -341,6 +456,8 @@ console.log(deposit);
 const withdrawal = movements.filter(movement => movement < 0);
 console.log(withdrawal);
 */
+
+/*
 // REDUCE METHOD: we convert all the elements in an array to one single value.
 
 console.log(movements);
@@ -361,7 +478,7 @@ const maximum = movements.reduce(
 // we kept the second parameter movements[0], becuase we have negative values in movements array so whenever we will compare with negative values 0 will always be greater than them, in this case it was fine, but what if we need to find the minimum value which can be negative then that would have caused problem.
 
 console.log(maximum);
-
+*/
 ///////////////////////////////////////
 // Coding Challenge #2
 
@@ -381,22 +498,71 @@ TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 GOOD LUCK 😀
 */
 
+/*
 const dogsAges = [5, 2, 4, 1, 15, 8, 3];
 
+const calcAverageHumanAge = function (ages) {
+  const humagAges = ages.map(age => (age <= 2 ? age * 2 : 16 + age * 4));
+  const adultDogs = humagAges.filter(age => age >= 18);
 
-const calcAverageHumanAge = function (ages){
- const humagAges =  ages.map(age => age<= 2? age * 2: 16 + age * 4)
- const adultDogs = humagAges.filter(age => age>=18)
-
-const average = adultDogs.reduce((acc, curr, i, arr)=>{
-  return acc + curr/arr.length;
- },0)
-return average;
-}
+  const average = adultDogs.reduce((acc, curr, i, arr) => {
+    return acc + curr / arr.length;
+  }, 0);
+  return average;
+};
 
 const avg1 = calcAverageHumanAge(dogsAges);
 console.log(avg1);
 
-const avg2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4])
+const avg2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
 console.log(avg2);
 
+// const eurToUsd = 1.1;
+// const totalDepositsUsd = movements
+//   .filter(movement => movement > 0)
+//   .map(movement => movement * eurToUsd)
+//   .reduce((acc, cur) => acc + cur, 0);
+
+// console.log(totalDepositsUsd);
+
+
+// Challenge 3: create calcAverageHumanAge function using arrow function and use chaining
+const calcAverageHumanAgeArr = ages => {
+  const average = ages
+    .map(age => (age <= 2 ? age * 2 : 16 + age * 4))
+    .filter(age => age >= 18)
+    .reduce((acc, curr, i, arr) => {
+      return acc + curr / arr.length;
+    }, 0);
+  return average;
+};
+
+const avg3 = calcAverageHumanAgeArr([16, 6, 10, 5, 6, 1, 4]);
+
+console.log(avg3);
+*/
+
+/*
+// FIND METHOD: we can use find method to retreive one element of an array based on a condition.
+
+const firstWithdrawl = account1.movements.find(move => move<0)
+
+// here the find method will look for values less than 0 and it will return the first value that will be below zero.
+// it looks similar to filter method but the only difference is filter method returns new array and the find method returns the first element that satisfies the condition.
+
+console.log(firstWithdrawl);
+
+console.log(accounts);
+
+const account = accounts.find(account => account.owner === 'Jessica Davis')
+console.log(account);
+
+let accountFor;
+for(const account of accounts){
+  if(account.owner==='Jessica Davis'){
+    accountFor =  account;
+    console.log(accountFor);
+  }
+}
+// console.log(accountFor);
+*/
