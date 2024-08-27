@@ -61,10 +61,12 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
   containerMovements.innerHTML = '';
 
-  movements.forEach((movement, i) => {
+  movs.forEach((movement, i) => {
     const type = `${movement > 0 ? 'deposit' : 'withdrawal'}`;
     const html = `
       <div class="movements__row">
@@ -192,6 +194,26 @@ btnTransfer.addEventListener('click', e => {
   }
 });
 
+// Event handler for loan button
+btnLoan.addEventListener('click', e => {
+  // prevents default reloading
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (
+    amount > 0 &&
+    currentAccount.movements.some(move => move >= amount * 0.1)
+  ) {
+    // Add movement
+    currentAccount.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+
+  inputLoanAmount.value = '';
+});
 
 // Event handler for close account button
 btnClose.addEventListener('click', e => {
@@ -208,13 +230,22 @@ btnClose.addEventListener('click', e => {
 
     accounts.splice(index, 1);
     containerApp.style.opacity = 0;
-
   } else {
     console.log(
       'Invalid Credentials... Please Provide the correct username and pin.'
     );
   }
   inputClosePin.value = inputCloseUsername.value = '';
+});
+
+// Sort Movements
+let sorted = false;
+btnSort.addEventListener('click', e => {
+  e.preventDefault();
+
+  displayMovements(currentAccount.movements, !sorted);
+
+  sorted = !sorted;
 });
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -565,4 +596,160 @@ for(const account of accounts){
   }
 }
 // console.log(accountFor);
+*/
+
+/*
+
+// SOME METHOD:
+// to understand some methods lets first remind the includes method, include method checks if the provided value is present inside an array.
+const abc = account1.movements.includes(-130);
+
+console.log(abc);
+
+// while some method checks if there are any values that satisfies the condition provided in call back function, if there are values satisfying the condition it will return true, or else it will return false.
+
+const anyDeposits = account1.movements.some(movement => movement > 0);
+console.log(anyDeposits);
+
+// EVERY METHOD: every method is same as some method but the key difference is every methods will only return true if all elements inside an array satisfies the condition.
+
+console.log(account4.movements.every(move => move > 0)); // true as the account4 only has deposits.
+console.log(account1.movements.every(move => move > 0)); // false as the account1 also contains the negative values which are basically withdrawls.
+
+// Note:- up until now we have used the callback function inside the method parameters but we can create separate call back function and then we can use the same function in different different methods.
+
+// separate callback
+const deposit = move => move > 0;
+console.log(account4.movements.every(deposit));
+console.log(account4.movements.some(deposit));
+console.log(account4.movements.filter(deposit));
+
+*/
+
+/*
+
+// FLAT METHOD: flat method basically converts the nested array into single array, if the array is nested to only one lever then we simply use flat() method to convert it into single array, incase the level of nesting is more then we have to provide the level number as parameter to flat method based on a number it will convert the array from deeply nested to normal array.
+const arr = [[1, 2, 3], [4, 5, 6, 7], 8, 9, 10];
+console.log(arr.flat());
+
+const arr2 = [[[1, 2], 3], [4, [5, 6, [55, 66]], 7], 8, [9, [10]]];
+console.log(arr2.flat(2));
+console.log(arr2.flat(3));
+
+
+// FLAT
+const overallBalance = accounts
+  .map(account => account.movements)
+  .flat()
+  .reduce((acc, move) => acc + move, 0);
+
+console.log(overallBalance);
+
+// it turns out that using map method and then to convert into single array using flat method is common operation so to make it more simple and easy we have another method is which is flatMap(). one thing to note with flatmap we can only go one lever deeper to convert the arrays, if you need to go more deeper then make sure to use flat and map methods separately.
+
+// FLATMAP
+const overallBalance2 = accounts
+  .flatMap(account => account.movements)
+  .reduce((acc, move) => acc + move, 0);
+
+console.log(overallBalance2);
+
+*/
+
+/*
+// SORT METHOD:
+
+// sort method basically sort the strings, so in case we are sorting the numbers using simply .sort() method it will sort those numbers as per strings
+
+const owners = [
+  'Mahendra',
+  'Ashwini',
+  'Sukoon',
+  'Aashu',
+  'Mahi',
+  'zebra',
+  'akshu',
+  'Zach',
+  'Thomas',
+  'AKSHU',
+];
+
+owners.sort();
+
+console.log(owners);
+
+// output: ['AKSHU', 'Aashu', 'Ashwini', 'Mahendra', 'Mahi', 'Sukoon', 'Thomas', 'Zach', 'akshu', 'zebra']
+
+// so as we can see from above output, the capital letter values are sorted first then the small letters are give preference.
+
+// account1.movements.sort();
+// console.log(account1.movements);
+
+//output: [-130, -400, -650, 1300, 200, 3000, 450, 70]
+// if you see above output for numbers the out is not as expected, because the string method is basically sorts the array by considering the values as a string.
+
+// so get correct output we can provide the callback function to sort method.
+
+console.log(account1.movements);
+//output:
+//[200, 450, -400, 3000, -650, -130, 70, 1300]
+
+// Ascending
+// a and b is basically current and next value in the below call back function
+account1.movements.sort((a, b) => {
+  //return < 0, a b (keep order as it is)
+  //return > 0, b a (reverse the order)
+
+  if (a > b) {
+    return 1;
+  }
+  if (a < b) {
+    return -1;
+  }
+});
+
+console.log(account1.movements);
+
+// Descending
+account1.movements.sort((a, b) => {
+  //return < 0, a b (keep order as it is)
+  //return > 0, b a (reverse the order)
+
+  if (a > b) {
+    return -1;
+  }
+  if (a < b) {
+    return 1;
+  }
+});
+console.log(account1.movements);
+
+// this above code works for strings as well, lets try to sort the strings in descending order using same code.
+owners.sort((a, b) => {
+  //return < 0, a b (keep order as it is)
+  //return > 0, b a (reverse the order)
+
+  if (a > b) {
+    return -1;
+  }
+  if (a < b) {
+    return 1;
+  }
+});
+
+console.log(owners);
+// this will give the owners arrays in descending order.
+
+// incase we are just working with numbers we can even shorten this logic.
+// as we know if a > b then a - b will be positive value (value>0) and if a < b then a - b will be negative value. (value < 0). note that if the a === b then the order of values will be as it is.
+account2.movements.sort((a, b) => a - b);
+console.log(account2.movements);
+
+// similarily for // descending we can do b - a;
+
+account2.movements.sort((a, b) => b - a);
+
+console.log(account2.movements);
+
+
 */
