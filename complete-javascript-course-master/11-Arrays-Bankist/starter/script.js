@@ -753,3 +753,129 @@ console.log(account2.movements);
 
 
 */
+
+// until now we learned following ways of creating arrrays.
+
+// 1.
+const arr = [1, 2, 3, 4, 5, 6, 7];
+
+// 2.
+const arr2 = new Array(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+console.log(arr, arr2);
+
+// in above new Array constructor if we only specify one element, then the Array constructor creates an empty array with specified element length, note that this will only happen if we provide the number as an element that too without decimal.
+
+// console.log(new Array(7000)); // even if the number is large it will create an empty array with that length here in this case empty array of length 7000.
+console.log(new Array(7)); // empty array of length 7
+
+console.log('a'); // as usual normal array which has only one element which is 'a'
+// console.log(3.4); // invalid it will consider the empty array of invalid length so this is invalid and will throw error.
+
+const x = new Array(5);
+
+console.log(x); // empty array of length 5.
+
+console.log(x.map(() => 5)); // nothing will happen it will still be an empty array of length five.
+
+// so most of the methods do no work on this empty array but there is one method which does work which is fill method.
+
+//FILL METHOD: fill method basically fills the based on call back function code.
+
+// x.fill(17) // x array will be filled with the value 17 at all positions.
+
+// x.fill(17, 2) // x array will be filled with the value 17 but starting from index 2 till the end.
+
+x.fill(17, 1, 4); // x array will be filled with value 17 starting from index 1 to the index 4-1
+console.log(x);
+
+// it is not necessary to use fill method with empty array, it can be used on existing arrays as well.
+arr.fill(3, 3, 5);
+
+console.log(arr);
+
+// Array.from():
+
+const y = Array.from({ length: 10 }, () => 1);
+console.log(y); // new array of length 10 will be created and will be filled with value 1 at all positions
+
+const z = Array.from({ length: 10 }, (_, i) => i + 1); // here underscore means throw away variable. which we dont need in this case.
+console.log(z); // new array of length 10 will be created and will be filled the values from 1 to 10
+
+labelBalance.addEventListener('click', () => {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('₹', ''))
+  );
+  console.log(movementsUI);
+});
+
+// Array methods practice:
+
+// 1. calculate all deposits sum for all accounts in the bank
+
+const depositSums = accounts
+  // .map(acc => acc.movements)
+  // .flat()
+  .flatMap(acc => acc.movements) // we can use flatMap instead of using map and then flat method.
+  .filter(move => move > 0)
+  .reduce((sum, cur) => sum + cur, 0);
+
+console.log(depositSums);
+
+// 2. calculate number of deposits greater than or equals one thousand.
+
+// first way to solve this problem
+const numDeposits1000 = accounts
+  .flatMap(acc => acc.movements)
+  .filter(move => move >= 1000).length;
+
+console.log(numDeposits1000);
+
+// second way:
+const numDepositsOver1000 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((count, cur) => (cur >= 1000 ? ++count : count), 0);
+console.log(numDepositsOver1000);
+
+// 3. calculate all deposits and withdrawls
+
+const { deposits, withdrawls } = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (sums, cur) => {
+      // cur > 0 ? (sums.deposits += cur) : (sums.withdrawls += cur);
+
+      sums[cur > 0 ? 'deposits' : 'withdrawls'] += cur;
+      return sums;
+    },
+    { deposits: 0, withdrawls: 0 }
+  );
+
+console.log(deposits, withdrawls);
+
+// 4. convert the sentence into title case.
+
+//this is a nice title => This Is a Nice Title
+
+const convertToTitleCase = function (title) {
+
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+
+  const exceptions = ['a', 'an', 'the', 'but', 'or', 'and', 'in', 'with'];
+
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word =>
+      exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)
+    ).join(' ')
+
+  return capitalize(titleCase);
+};
+
+console.log(convertToTitleCase('This is a nice title'));
+console.log(convertToTitleCase('This is a LONG title but not too long'));
+console.log(convertToTitleCase('and here is an another title with an EXAMPLE'));
+console.log(convertToTitleCase('This is aslo anotHEr TITLE and bit wierd'));
+
