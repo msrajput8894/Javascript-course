@@ -94,7 +94,7 @@ const displayMovements = function (movements, sort = false) {
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov.toFixed(2)}€</div>
       </div>
     `;
 
@@ -104,19 +104,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +126,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 const createUsernames = function (accs) {
@@ -206,7 +206,7 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
@@ -251,3 +251,227 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+/*
+// in javascript the numbers are always treated as decimal no matter if we write them as a integer.
+console.log(23 === 23.0);
+
+// we know that numbers are stored in binary form, so storing decimal numbers is quite a challenge.
+//Base 10 -> 0 to 9, 1/10 = 0.1, 3/10 = 3.3333333...
+//Binary base 2 -> 0 1
+
+console.log(0.1 + 0.2); // expected output is 0.3 but the actual output is weird- 0.30000000000000004
+
+console.log(0.1 + 0.2 === 0.3);
+
+// conversion
+console.log(Number('23'));
+console.log(+'23');
+
+// parsing
+console.log(Number.parseInt('30px', 10)); // 30
+console.log(Number.parseInt('e23', 10)); // NaN, String must start with a number
+
+console.log(Number.parseInt('  2.5rem  ')); // 2
+console.log(Number.parseFloat('   2.5rem ')); // 2.5
+
+console.log(parseFloat('3.55rem')); // 3.55
+// it is not necessary to use parseInt and parseFloat on a Number function object, but it has become convention to use it on Number function.
+
+// isNaN: to check value is not a number
+console.log(Number.isNaN(20));
+console.log(Number.isNaN('20'));
+console.log(Number.isNaN('aa'));
+console.log(Number.isNaN(+'20X'));
+console.log(Number.isNaN(23/0)); 
+
+// it is recommended to not use this to check if something is a number
+
+
+// isFinite: this should be your go to way to check if the value is a number.
+console.log(Number.isFinite(23));
+console.log(Number.isFinite(+'23'));
+console.log(Number.isFinite('a'));
+console.log(Number.isFinite(23/0));
+
+// isInteger: to check if the value is integer
+
+console.log(Number.isInteger(20)); // true
+console.log(Number.isInteger(20.0)); //true
+console.log(Number.isInteger(20/0)); //true
+
+
+*/
+
+/*
+// ways to calculate square root
+
+console.log(Math.sqrt(25)); // 5
+console.log(25**(1/2)); // 5
+
+// cube root
+console.log(8**(1/3)); // 2
+console.log(125**(1/3)); // 4.99999999999
+
+//maximum value
+console.log(Math.max(1, 17, 27, 25, 7)); //27
+console.log(Math.max(1, '17', '27', 25, 7)); //27
+console.log(Math.max(1, '17px', '27px', 25, 7)); // NaN Parsing does not work
+
+// Min value
+console.log(Math.min(1, 17, 27, 25, 7)); // 1
+console.log(Math.min('1', '17', '27', 25, 7)); // 1
+console.log(Math.min('1', '17px', '27', 25, 7)); // NaN
+
+// PI
+console.log(Math.PI * Number.parseFloat('10px') ** 2);
+
+// Random number
+console.log(Math.trunc( Math.random() * 6) + 1);
+
+const randomInt = (min, max) => Math.trunc(Math.random() * (max - min) + 1) + min;
+
+console.log(randomInt(10, 20));
+
+// rounding integers
+
+// Math.round: rounds the number to nearest integer
+console.log(Math.round(23.3)); // 23 
+console.log(Math.round(23.9)); // 24
+
+// Math.ceil: rounds up to next integer
+console.log(Math.ceil(23.3)); // 24 
+console.log(Math.ceil(23.9)); // 24
+
+// Math.floor : rounds down to previous integer
+console.log(Math.floor(23.3)); // 23 
+console.log(Math.floor(23.9)); // 23
+
+// Math.trunc: removes the digits after decimal point
+console.log(Math.trunc(23.3)); // 23
+
+// Note all of these methods also support type coercion
+console.log(Math.round('17.5')); // 18
+
+// you might think that the floor and trunc methods are same, for positive integers they are indeed a same thing but for negative numbers they work differently
+
+console.log(Math.trunc(-23.4)); // 23
+console.log(Math.floor(-23.4)); // 24
+
+// rounding decimals:
+
+console.log((2.7).toFixed(0)); // 3
+console.log((2.7).toFixed(3)); // 2.700 
+// Note: toFixed always returns a string not a number so keep that in mind.
+
+console.log(+(45.7252832).toFixed(2)); // 45.73 // this will be a number as we added + sign at the start.
+
+// Boxing: As we know numbers are primitive values and method do not work on primitives. so behind the scene JavaScript will do boxing, it will transform the number to an object and then call the method on the object, once the operation is performed it will convert it back to primitive
+
+*/
+
+/*
+// remainder operator (modulus operator):
+
+console.log(5 % 2);
+
+console.log(8 % 3);
+
+// to check if the number is even or odd
+
+console.log(6 % 2); // 0 if the output is zero then the number is even, so anything which is divisible by 2 is even
+
+console.log(7 % 2); // 1 odd
+
+const isEven = num => num % 2 === 0;
+
+console.log(isEven(4));
+console.log(isEven(27));
+console.log(isEven(17));
+console.log(isEven(34));
+
+labelBalance.addEventListener('click', () => {
+  [...document.querySelectorAll('.movements__row')].forEach((row, i) => {
+    // 0, 2, 4, 6
+    if (i % 2 === 0) row.style.backgroundColor = 'orange';
+
+    //0, 3, 6, 9
+    if (i % 3 === 0) row.style.backgroundColor = 'pink';
+  });
+});
+
+
+*/
+
+/*
+
+// Numeric separators:
+
+// 287,460,000,000
+
+const diameter = 287_460_000_000;
+console.log(diameter); // 287460000000
+
+// using underscore as separator it becomes to easy to read large numbers. like we use comma to identify thousand separator.
+
+const price = 34_599;
+console.log(price);
+
+const transferFee = 1_500;
+
+const PI = 3.14_15 
+console.log(PI);
+
+// this does not work when we try to convert a string with underscore as a separator to convert into a number.
+
+console.log(Number('230_000')); // NaN
+console.log(Number.parseInt('230_000')); // 230 this will only take initial part of number.
+*/
+
+// numbers are represented internally as 64 bits that means there are exactly 64 bits to store the numbers out of these 64 bits only 53 are used to store the digits.
+
+// so that means there is a limit on how big the number can be stored.
+
+console.log(2 ** 53-1); // this is the number that javascript can store safely
+console.log(Number.MAX_SAFE_INTEGER); // this gives the same number as above
+
+console.log(2 ** 53+1); // not safe
+console.log(2 ** 53+2); // not safe
+console.log(2 ** 53+3); // not safe
+console.log(2 ** 53+4); // not safe
+
+// we can use bigInt to store the numbers bigger than the above safe integer. with bigInt we can store any number no matter how big it is.
+console.log(75925965974533759325694775974975969275749n); // simply adding n at the end makes it bigInt
+console.log(BigInt(852027575));
+
+// operations:
+
+console.log(100000n + 1000000n);
+console.log(7974575205804857575408n * 100743774n);
+
+const huge = 239750348052058820n
+const num =17 
+// console.log(huge * num); // INVALID: cannot mix bigInt with other types.
+ console.log(huge * BigInt(num)); // we can convert it to bigInt
+
+ console.log(20n > 15);
+ console.log(20n > 20);
+
+ console.log(20n === 20); // false -> because javascript does not do type coercion when used triple equal
+
+ console.log(typeof 20n); // bigint
+
+ console.log(20n == 20); // true
+
+ console.log( huge + ' is REALLY big!!!');
+
+ // Math operation such as Math.sqrt will not work on bigints
+
+// console.log(Math.sqrt(16n)); // invalid
+
+// divisions:
+console.log(10n/ 3n); // 3n
+console.log(10/ 3); // 3.3333333
+
+// bigint basically cuts off the decimal part of the number.
+
+
