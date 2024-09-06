@@ -964,5 +964,7 @@ console.log(dogs.some(DogsEatingOkay));
 // 7.
 console.log( dogs.filter(DogsEatingOkay));
 
+
+// 8.
 const dogsCopy = dogs.slice().sort((a, b) => a.recFood - b.recFood)
 console.log(dogsCopy);
