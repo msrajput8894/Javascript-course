@@ -10,40 +10,40 @@
 // DIFFERENT DATA! Contains movement dates, currency and locale
 
 const account1 = {
-  owner: 'Jonas Schmedtmann',
+  owner: 'Mahendrasing Rajput',
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
   pin: 1111,
 
   movementsDates: [
-    '2019-11-18T21:31:17.178Z',
-    '2019-12-23T07:42:02.383Z',
-    '2020-01-28T09:15:04.904Z',
-    '2020-04-01T10:17:24.185Z',
-    '2020-05-08T14:11:59.604Z',
-    '2020-05-27T17:01:17.194Z',
-    '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2023-11-18T21:31:17.178Z',
+    '2023-12-23T07:42:02.383Z',
+    '2024-01-28T09:15:04.904Z',
+    '2024-04-01T10:17:24.185Z',
+    '2024-05-08T14:11:59.604Z',
+    '2024-05-27T17:01:17.194Z',
+    '2024-09-04T23:36:17.929Z',
+    '2024-09-06T10:51:36.790Z',
   ],
-  currency: 'EUR',
-  locale: 'pt-PT', // de-DE
+  currency: 'INR',
+  locale: 'en-IN', // de-DE
 };
 
 const account2 = {
-  owner: 'Jessica Davis',
+  owner: 'Ashwini Rajput',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
 
   movementsDates: [
-    '2019-11-01T13:15:33.035Z',
-    '2019-11-30T09:48:16.867Z',
-    '2019-12-25T06:04:23.907Z',
-    '2020-01-25T14:18:46.235Z',
-    '2020-02-05T16:33:06.386Z',
-    '2020-04-10T14:43:26.374Z',
-    '2020-06-25T18:49:59.371Z',
-    '2020-07-26T12:01:20.894Z',
+    '2023-11-01T13:15:33.035Z',
+    '2023-11-30T09:48:16.867Z',
+    '2023-12-25T06:04:23.907Z',
+    '2024-01-25T14:18:46.235Z',
+    '2024-02-05T16:33:06.386Z',
+    '2024-04-10T14:43:26.374Z',
+    '2024-09-03T18:49:59.371Z',
+    '2024-09-06T12:01:20.894Z',
   ],
   currency: 'USD',
   locale: 'en-US',
@@ -81,20 +81,55 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements, sort = false) {
+const formatMovementDate = function (date, locale) {
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const daysPassed = calcDaysPassed(new Date(), date);
+  console.log(daysPassed);
+
+  if (daysPassed === 0) return 'Today';
+  if (daysPassed === 1) return 'Yesterday';
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  
+    // const day = `${date.getDate()}`.padStart(2, 0);
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    // const year = date.getFullYear();
+    // return `${day}/${month}/${year}`;
+
+    return new Intl.DateTimeFormat(locale).format(date);
+  
+};
+
+// Formats the currency according to locale and currency
+const formatCurrency  = function(value, locale, currency){
+ return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency
+  }).format(value)
+}
+
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
+    const date = new Date(acc.movementsDates[i]);
+    const displayDate = formatMovementDate(date, acc.locale);
+
+    const formattedMov = formatCurrency(mov,acc.locale, acc.currency)
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov.toFixed(2)}€</div>
+        <div class="movements__date">${displayDate}</div>
+        <div class="movements__value">${formattedMov}</div>
       </div>
     `;
 
@@ -104,19 +139,19 @@ const displayMovements = function (movements, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = formatCurrency(acc.balance,acc.locale, acc.currency);
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent =  formatCurrency(incomes,acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = formatCurrency(Math.abs(out),acc.locale, acc.currency);
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -126,7 +161,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = formatCurrency(interest,acc.locale, acc.currency);
 };
 
 const createUsernames = function (accs) {
@@ -142,7 +177,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -154,6 +189,26 @@ const updateUI = function (acc) {
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
+
+// FAKE ALWAYS LOGGED IN
+currentAccount = account1;
+updateUI(currentAccount);
+containerApp.style.opacity = 100;
+
+// Experimenting with intl API
+// const now = new Date();
+// const options = {
+//   hour: 'numeric',
+//   minute: 'numeric',
+//   day: 'numeric',
+//   month: 'short', // long, 2-digit, numeric
+//   year: 'numeric', // 2-digit
+//   weekday: 'short' // narrow, long
+// }
+
+// const locale = navigator.language;
+// console.log(locale);
+// labelDate.textContent = new Intl.DateTimeFormat(locale, options).format(now)
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -170,6 +225,24 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
+
+    // Create current date and time
+    const now = new Date();
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric', // long, 2-digit, short
+      year: 'numeric', // 2-digit
+      // weekday: 'short' // narrow, long
+    }
+    
+    // const locale = navigator.language;
+    // console.log(locale);
+
+    labelDate.textContent = new Intl.DateTimeFormat(currentAccount.locale, options).format(now)
+
+   
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -198,6 +271,10 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    // Add transfer date
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAcc.movementsDates.push(new Date().toISOString());
+
     // Update UI
     updateUI(currentAccount);
   }
@@ -211,6 +288,9 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
     currentAccount.movements.push(amount);
+
+    // Add Loan request date
+    currentAccount.movementsDates.push(new Date().toISOString());
 
     // Update UI
     updateUI(currentAccount);
@@ -244,7 +324,7 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
 
@@ -427,6 +507,7 @@ console.log(Number('230_000')); // NaN
 console.log(Number.parseInt('230_000')); // 230 this will only take initial part of number.
 */
 
+/*
 // numbers are represented internally as 64 bits that means there are exactly 64 bits to store the numbers out of these 64 bits only 53 are used to store the digits.
 
 // so that means there is a limit on how big the number can be stored.
@@ -475,3 +556,80 @@ console.log(10/ 3); // 3.3333333
 // bigint basically cuts off the decimal part of the number.
 
 
+*/
+
+// Dates:
+/*
+// Create a date:
+const now = new Date();
+console.log(now);
+
+console.log(new Date('Sep 07 2024 12:38:44'));
+console.log(new Date('January 17, 1999')); // this is not ideal, or not reliable
+console.log(new Date(account1.movementsDates[0]));
+
+console.log(new Date(2030, 10, 19, 13, 30, 5)); // (YYYY, MM, DD, hh,mm,ss) , here we have provided 10th month but in output the month is shown november, that is because the month is zero based.
+
+console.log(new Date(2025,3,27));
+
+// unix time started on january 1st 1970 so to get that date
+console.log(new Date(0)); //Thu Jan 01 1970 05:30:00 GMT+0530 (India Standard Time)
+
+console.log(new Date(3 * 24 * 60 * 60 * 1000)); // three days later unix time: Sun Jan 04 1970 05:30:00 GMT+0530 (India Standard Time)
+
+
+// working with dates
+
+const future = new Date(2025, 3, 27, 10,30)
+console.log(future);
+
+console.log(future.getFullYear()); // 2025
+console.log(future.getMonth()); // 3 remember it is 0 based so actual month is apr(4)
+console.log(future.getDate()); // 27
+console.log(future.getHours()); // 10
+console.log(future.getMinutes()); // 30
+console.log(future.getSeconds()); // 0
+console.log(future.getMilliseconds()); // 0
+console.log(future.toISOString()); // 2025-04-27T05:00:00.000Z
+console.log(future.getTime()); // 1745730000000 // this a timestamp which is basically the milliseconds that have passed since jan 1 1970
+
+console.log(new Date(1745730000000)); // Sun Apr 27 2025 10:30:00 GMT+0530 (India Standard Time) // we can use the timestamp to get the date this will give the exact date.
+
+// timestamp is very important concept, we have separate method to get the current timestamp:
+
+console.log(Date.now()); // current timestamp
+console.log(new Date()); // current date and time
+
+
+// there are also set version of all these method that we saw earlier
+future.setFullYear(2026)
+future.setMonth(0)
+future.setDate(17)
+console.log(future);
+*/
+
+/*
+// operations with dates:
+const future = new Date(2025, 3, 27, 10, 30);
+console.log(+future); // this will give the timestamp in milliseconds
+
+// const calcDaysPassed = (date1, date2) => Math.abs(date2 - date1) /(1000 * 60 * 60 * 24)
+
+// const days1 = calcDaysPassed(new Date(2025, 3, 27), new Date(2025, 3, 1))
+// console.log(days1);
+
+
+*/
+
+// Internationalizing numbers
+const num = 369230.31;
+
+const options = {
+  style: 'currency',
+  currency: 'INR'
+
+}
+
+console.log('US:    ', new Intl.NumberFormat('en-US', options).format(num));
+console.log('INDIA: ', new Intl.NumberFormat('en-IN', options).format(num));
+console.log(navigator.language, new Intl.NumberFormat(navigator.language, options).format(num));
