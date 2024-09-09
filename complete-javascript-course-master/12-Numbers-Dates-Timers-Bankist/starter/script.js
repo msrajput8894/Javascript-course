@@ -394,7 +394,7 @@ console.log(23 === 23.0);
 
 console.log(0.1 + 0.2); // expected output is 0.3 but the actual output is weird- 0.30000000000000004
 
-console.log(0.1 + 0.2 === 0.3);
+console.log(0.1 + 0.2 === 0.3); // false
 
 // conversion
 console.log(Number('23'));
@@ -505,9 +505,9 @@ console.log(+(45.7252832).toFixed(2)); // 45.73 // this will be a number as we a
 /*
 // remainder operator (modulus operator):
 
-console.log(5 % 2);
+console.log(5 % 2); // 1
 
-console.log(8 % 3);
+console.log(8 % 3); // 2
 
 // to check if the number is even or odd
 
@@ -517,10 +517,10 @@ console.log(7 % 2); // 1 odd
 
 const isEven = num => num % 2 === 0;
 
-console.log(isEven(4));
-console.log(isEven(27));
-console.log(isEven(17));
-console.log(isEven(34));
+console.log(isEven(4));  // true
+console.log(isEven(27)); // false
+console.log(isEven(17)); // false
+console.log(isEven(34)); // even
 
 labelBalance.addEventListener('click', () => {
   [...document.querySelectorAll('.movements__row')].forEach((row, i) => {
@@ -544,12 +544,12 @@ labelBalance.addEventListener('click', () => {
 const diameter = 287_460_000_000;
 console.log(diameter); // 287460000000
 
-// using underscore as separator it becomes to easy to read large numbers. like we use comma to identify thousand separator.
+// using underscore as separator it becomes easy to read large numbers. like we use comma to identify thousand separator.
 
 const price = 34_599;
-console.log(price);
+console.log(price); // 34,599
 
-const transferFee = 1_500;
+const transferFee = 1_500; // 1,500
 
 const PI = 3.14_15 
 console.log(PI);
@@ -574,7 +574,7 @@ console.log(2 ** 53+3); // not safe
 console.log(2 ** 53+4); // not safe
 
 // we can use bigInt to store the numbers bigger than the above safe integer. with bigInt we can store any number no matter how big it is.
-console.log(75925965974533759325694775974975969275749n); // simply adding n at the end makes it bigInt
+console.log(75925965974533759325694775974975969275749n); // simply adding n at the end makes it bigInt, or we can use BigInt function as follows.
 console.log(BigInt(852027575));
 
 // operations:
