@@ -91,23 +91,22 @@ const formatMovementDate = function (date, locale) {
   if (daysPassed === 0) return 'Today';
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
-  
-    // const day = `${date.getDate()}`.padStart(2, 0);
-    // const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    // const year = date.getFullYear();
-    // return `${day}/${month}/${year}`;
 
-    return new Intl.DateTimeFormat(locale).format(date);
-  
+  // const day = `${date.getDate()}`.padStart(2, 0);
+  // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  // const year = date.getFullYear();
+  // return `${day}/${month}/${year}`;
+
+  return new Intl.DateTimeFormat(locale).format(date);
 };
 
 // Formats the currency according to locale and currency
-const formatCurrency  = function(value, locale, currency){
- return new Intl.NumberFormat(locale, {
+const formatCurrency = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: currency
-  }).format(value)
-}
+    currency: currency,
+  }).format(value);
+};
 
 const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
@@ -122,7 +121,7 @@ const displayMovements = function (acc, sort = false) {
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovementDate(date, acc.locale);
 
-    const formattedMov = formatCurrency(mov,acc.locale, acc.currency)
+    const formattedMov = formatCurrency(mov, acc.locale, acc.currency);
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
@@ -139,19 +138,27 @@ const displayMovements = function (acc, sort = false) {
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = formatCurrency(acc.balance,acc.locale, acc.currency);
+  labelBalance.textContent = formatCurrency(
+    acc.balance,
+    acc.locale,
+    acc.currency
+  );
 };
 
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent =  formatCurrency(incomes,acc.locale, acc.currency);
+  labelSumIn.textContent = formatCurrency(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = formatCurrency(Math.abs(out),acc.locale, acc.currency);
+  labelSumOut.textContent = formatCurrency(
+    Math.abs(out),
+    acc.locale,
+    acc.currency
+  );
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -161,7 +168,11 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = formatCurrency(interest,acc.locale, acc.currency);
+  labelSumInterest.textContent = formatCurrency(
+    interest,
+    acc.locale,
+    acc.currency
+  );
 };
 
 const createUsernames = function (accs) {
@@ -186,14 +197,42 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+const startLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+
+    // in each call print the remaining time to UI
+    labelTimer.textContent = `${min}:${sec}`;
+
+    //when 0 seconds, stop timer and log out user
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
+      containerApp.style.opacity = 0;
+    }
+
+    // decrease the time every second
+    time--;
+  };
+
+  //set time to 5 minutes
+  let time = 5 * 60;
+
+  tick();
+  // call the timer every seconds
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
 // FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 // Experimenting with intl API
 // const now = new Date();
@@ -235,18 +274,23 @@ btnLogin.addEventListener('click', function (e) {
       month: 'numeric', // long, 2-digit, short
       year: 'numeric', // 2-digit
       // weekday: 'short' // narrow, long
-    }
-    
+    };
+
     // const locale = navigator.language;
     // console.log(locale);
 
-    labelDate.textContent = new Intl.DateTimeFormat(currentAccount.locale, options).format(now)
-
-   
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
 
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
+
+    // Start log out timer
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
 
     // Update UI
     updateUI(currentAccount);
@@ -277,6 +321,10 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+
+    // Reset timer
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
 
@@ -285,16 +333,21 @@ btnLoan.addEventListener('click', function (e) {
 
   const amount = Math.floor(inputLoanAmount.value);
 
-  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1))
+    setTimeout(() => {
+      // Add movement
+      currentAccount.movements.push(amount);
 
-    // Add Loan request date
-    currentAccount.movementsDates.push(new Date().toISOString());
+      // Add Loan request date
+      currentAccount.movementsDates.push(new Date().toISOString());
 
-    // Update UI
-    updateUI(currentAccount);
-  }
+      // Update UI
+      updateUI(currentAccount);
+
+      // Reset timer
+      clearInterval(timer);
+      timer = startLogOutTimer();
+    }, 5000);
   inputLoanAmount.value = '';
 });
 
@@ -621,6 +674,7 @@ console.log(+future); // this will give the timestamp in milliseconds
 
 */
 
+/*
 // Internationalizing numbers
 const num = 369230.31;
 
@@ -633,3 +687,51 @@ const options = {
 console.log('US:    ', new Intl.NumberFormat('en-US', options).format(num));
 console.log('INDIA: ', new Intl.NumberFormat('en-IN', options).format(num));
 console.log(navigator.language, new Intl.NumberFormat(navigator.language, options).format(num));
+
+*/
+
+// setTimeout and setInterval: so basically there are two timers in javascript, setTimeout timer sets the time and it executes the code after that time, while setInterval keeps executing the code after a set of interval
+
+// setTimeout(
+//   (ing1, ing2) => {
+//     console.log(`Here is you pizza with ${ing1} and ${ing2}...🍕`);
+//   },
+//   3000,
+//   'olives',
+//   'spinach'
+// );
+
+// here the setTimeout function does not actually stops the code execution, instead what it does is that it sets the time specified, continues to execute remaining code once the time is up it will execute the code inside callback function provided to setTimeout.
+
+// we can even provide the arguments to callback function, so we need to specify the arguments after the time we specify, then we can access those arguments inside the parenthesis of callback function.
+
+// as you can see in above example we have specified two arguments after time period, which are 'olives' and 'spinach'
+
+// we can even cancel the timeout before the specified time has passed. so basically setTimeout sets one unique id so we can use that id to cancel the timeout, we can use clearTimeout to cancel the timeout.
+/*
+const ingredients = ['onions', 'spinach', 'olives'];
+
+const timeoutId = setTimeout(
+  (ing1, ing2, ing3) => {
+    console.log(`Here is your pizza with ${ing1}, ${ing2} and ${ing3}...🍕🍕`);
+  },
+  3000,
+  ...ingredients
+);
+
+if (ingredients.includes('spinach')) clearTimeout(timeoutId);
+
+console.log('Waiting...');
+
+*/
+// setInterval: setInterval executes the code after specified time.
+
+// setInterval(() => {
+//   const now = new Date();
+
+//   const hour = `${now.getHours()}`.padStart(2, 0);
+//   const min = `${now.getMinutes()}`.padStart(2, 0);
+//   const sec = `${now.getSeconds()}`.padStart(2, 0);
+//   // const misec = `${now.getMilliseconds()}`.padStart(4, 0);
+//   console.log(`${hour}:${min}:${sec}`);
+// }, 1000);
