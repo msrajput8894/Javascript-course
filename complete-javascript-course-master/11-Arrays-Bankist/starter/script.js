@@ -628,7 +628,7 @@ console.log(account4.movements.filter(deposit));
 
 /*
 
-// FLAT METHOD: flat method basically converts the nested array into single array, if the array is nested to only one lever then we simply use flat() method to convert it into single array, incase the level of nesting is more then we have to provide the level number as parameter to flat method based on a number it will convert the array from deeply nested to normal array.
+// FLAT METHOD: flat method basically converts the nested array into single array, if the array is nested to only one level then we simply use flat() method to convert it into single array, incase the level of nesting is more then we have to provide the level number as parameter to flat method based on a number it will convert the array from deeply nested to normal array.
 const arr = [[1, 2, 3], [4, 5, 6, 7], 8, 9, 10];
 console.log(arr.flat());
 
@@ -680,15 +680,15 @@ console.log(owners);
 
 // output: ['AKSHU', 'Aashu', 'Ashwini', 'Mahendra', 'Mahi', 'Sukoon', 'Thomas', 'Zach', 'akshu', 'zebra']
 
-// so as we can see from above output, the capital letter values are sorted first then the small letters are give preference.
+// so as we can see from above output, the capital letter values are sorted first then the small letters are given preference.
 
 // account1.movements.sort();
 // console.log(account1.movements);
 
 //output: [-130, -400, -650, 1300, 200, 3000, 450, 70]
-// if you see above output for numbers the out is not as expected, because the string method is basically sorts the array by considering the values as a string.
+// if you see above output for numbers the output is not as expected, because the string method is basically sorts the array by considering the values as a string.
 
-// so get correct output we can provide the callback function to sort method.
+// so to get correct output we can provide the callback function to sort method.
 
 console.log(account1.movements);
 //output:
@@ -754,6 +754,54 @@ console.log(account2.movements);
 
 */
 
+<<<<<<< HEAD
+// until now we know following ways of creating arrays.
+
+const arr = [1, 2, 3, 4, 5, 6, 7];
+console.log(new Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+
+// in above new Array constructor if we only specify one element, then the Array constructor creates an empty array with the spcified element length, note that this will happen if we provide the number as an element that too without decimal.
+
+console.log(new Array(7)); // this will create empty array of length 7
+console.log(new Array('a')); // as usual array which has 'a' as a element
+// console.log(new Array(3.4)); // this will give error
+
+const x = new Array(5);
+console.log(x); // empty array of length 5
+
+console.log(x.map(() => 5)); // nothing will happen it will still be an empty array of length five.
+
+// so we can only use one method on this array which is fill method.
+
+// FILL METHOD:
+
+// x.fill(17)
+// console.log(x); // now the x array will be filled with value 17 at all indexes.
+
+// we can aslo specify begin parameter.
+// x.fill(7, 2);
+// console.log(x);
+
+// and we can also specify end parameter.
+
+x.fill(2, 1, 3);
+console.log(x);
+
+// just like slice final index is not included so above code only fill the x array with value 2 till index 2 (i.e. index 1 and 2)
+
+// it is not necessary to use fill method with emtpy array it can work on existing array as well.
+
+arr.fill(3, 4, 6);
+console.log(arr);
+
+// Array.from()
+
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+const z = Array.from({ length: 7 }, (_, i) => i + 1); // underscore means throw away variable we dont need the first variable.
+console.log(z);
+=======
 // until now we learned following ways of creating arrrays.
 
 // 1.
@@ -801,6 +849,7 @@ console.log(y); // new array of length 10 will be created and will be filled wit
 
 const z = Array.from({ length: 10 }, (_, i) => i + 1); // here underscore means throw away variable. which we dont need in this case.
 console.log(z); // new array of length 10 will be created and will be filled the values from 1 to 10
+>>>>>>> a24a6f39ae71aa158de2edb29c9cfdb2305280c4
 
 labelBalance.addEventListener('click', () => {
   const movementsUI = Array.from(
@@ -810,6 +859,26 @@ labelBalance.addEventListener('click', () => {
   console.log(movementsUI);
 });
 
+<<<<<<< HEAD
+// Array Methods Practice:
+
+// 1.
+const bankDepositSum = accounts
+  .flatMap(acc => acc.movements)
+  .filter(move => move > 0)
+  .reduce((acc, cur) => acc + cur, 0);
+console.log(bankDepositSum);
+
+// 2.
+const numDeposits100 = accounts
+  .flatMap(acc => acc.movements)
+  //.filter(move => move >= 1000).length
+  .reduce((count, cur, i, arr) => (cur >= 1000 ? ++count : count), 0);
+
+console.log(numDeposits100);
+
+// 3.
+=======
 // Array methods practice:
 
 // 1. calculate all deposits sum for all accounts in the bank
@@ -840,11 +909,16 @@ console.log(numDepositsOver1000);
 
 // 3. calculate all deposits and withdrawls
 
+>>>>>>> a24a6f39ae71aa158de2edb29c9cfdb2305280c4
 const { deposits, withdrawls } = accounts
   .flatMap(acc => acc.movements)
   .reduce(
     (sums, cur) => {
+<<<<<<< HEAD
+      // cur > 0 ? sums.deposits += cur : sums.withdrawls += cur
+=======
       // cur > 0 ? (sums.deposits += cur) : (sums.withdrawls += cur);
+>>>>>>> a24a6f39ae71aa158de2edb29c9cfdb2305280c4
 
       sums[cur > 0 ? 'deposits' : 'withdrawls'] += cur;
       return sums;
@@ -854,6 +928,16 @@ const { deposits, withdrawls } = accounts
 
 console.log(deposits, withdrawls);
 
+<<<<<<< HEAD
+// 4.
+
+//convert the sentence to title case.
+
+// this is a nice title -> This Is a Nice Title
+
+const convertToTitleCase = function (title) {
+  const exceptions = ['a', 'an', 'the', 'but', 'or', 'on', 'in', 'with'];
+=======
 // 4. convert the sentence into title case.
 
 //this is a nice title => This Is a Nice Title
@@ -862,10 +946,19 @@ const convertToTitleCase = function (title) {
   const capitalize = str => str[0].toUpperCase() + str.slice(1);
 
   const exceptions = ['a', 'an', 'the', 'but', 'or', 'and', 'in', 'with'];
+>>>>>>> a24a6f39ae71aa158de2edb29c9cfdb2305280c4
 
   const titleCase = title
     .toLowerCase()
     .split(' ')
+<<<<<<< HEAD
+    .map(word => exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1));
+
+    return titleCase;
+};
+
+console.log(convertToTitleCase('this is a nice title'));
+=======
     .map(word =>
       exceptions.includes(word) ? word : word[0].toUpperCase() + word.slice(1)
     )
@@ -968,3 +1061,4 @@ console.log( dogs.filter(DogsEatingOkay));
 // 8.
 const dogsCopy = dogs.slice().sort((a, b) => a.recFood - b.recFood)
 console.log(dogsCopy);
+>>>>>>> a24a6f39ae71aa158de2edb29c9cfdb2305280c4
