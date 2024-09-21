@@ -230,3 +230,36 @@ setTimeout(() => {
 
 // 1. it allows us to add multiple event listeners to same event.
 // 2. we can actually remove the event handler if we don't need it anymore.
+
+// rgb(255, 255, 255)
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+console.log(randomColor(0, 255));
+
+// keep one thing in mind this keyword is undefined in arrow functions and in event handers this keyword always points to the element to which it is attached.
+document.querySelector('.nav__link').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('link', e.target, e.currentTarget);
+
+  //stop propagation
+  // e.stopPropagation(); // not advisable, can be useful in rare situations
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  this.style.backgroundColor = randomColor();
+  console.log('link-container', e.target, e.currentTarget);
+});
+
+document.querySelector('.nav').addEventListener(
+  'click',
+  function (e) {
+    this.style.backgroundColor = randomColor();
+    console.log('nav', e.target, e.currentTarget);
+  }
+  // true // this makes the event to bubble in capturing phase.
+);
