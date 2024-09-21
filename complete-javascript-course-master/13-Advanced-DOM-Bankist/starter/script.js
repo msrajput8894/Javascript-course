@@ -166,7 +166,67 @@ logo.classList.remove('x', 'y');
 logo.classList.toggle('z');
 logo.classList.contains('z');
 
-// Don't use: it overrides all existing classes and also lets us add only one class to an element
 logo.className = 'mahendra';
+// Don't use: it overrides all existing classes and also lets us add only one class to an element
 
 */
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+
+const section1 = document.querySelector('#section--1');
+
+btnScrollTo.addEventListener('click', e => {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  //lets use getBoundingClientRect on button which is basically e.target
+  console.log(e.target.getBoundingClientRect());
+
+  // to get X and Y scroll position from the top of the page
+  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+
+  // to get the current viewport height and width
+  console.log(
+    'height/width viewport:',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling: // Old way
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // Scrolling: better way
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+///////////////////////////////////////////////
+
+//Event and Event listeners:
+
+// there are lots of different events in js, such as click, mouseenter you can always check the mdn reference for more details
+const h1 = document.querySelector('h1');
+
+const alertH1 = e => {
+  alert('addEventListener: Great! you are reading the heading :)');
+};
+
+h1.addEventListener('mouseenter', alertH1);
+
+setTimeout(() => {
+  console.log('removing event listener');
+  h1.removeEventListener('mouseenter', alertH1);
+}, 5000);
+
+// this is the old way of using event listener
+// h1.onmouseenter = e => {
+//   alert('onmouseenter: Great! you are reading the heading :)');
+// };
+
+// Now we only use addEventListener to work with events, there are two reasons why addEventListener is better
+
+// 1. it allows us to add multiple event listeners to same event.
+// 2. we can actually remove the event handler if we don't need it anymore.
