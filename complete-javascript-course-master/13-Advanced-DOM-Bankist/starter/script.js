@@ -214,7 +214,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
-  // section.classList.add('section--hidden');
+  section.classList.add('section--hidden');
 });
 
 //////////////////////////////////////////////////////////
@@ -592,3 +592,37 @@ console.log(h1.parentElement.children);
 });
 
 */
+
+//////////////////////////////////////////////////////////////
+
+// DomContentLoaded Event:
+
+// DOMContentLoaded event occurs when the HTMl is completely loaded and DOM tree is ready and built. keep in mind it does not include loading of images and external resources.
+
+// this event is attached to document
+
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML Parsed and DOM Tree built!', e);
+});
+
+// Load Event:
+
+// laod event occurs when everything is loaded, full page is completely loaded, including images and external resources.
+
+// this event is attached to window object
+
+window.addEventListener('load', function (e) {
+  console.log('Page fully loaded', e);
+});
+
+// beforeunload event:
+
+// this event occurs when user wants to leave the page. or want to close the tab or reload the tab.
+
+// it is not advised to use this event.
+
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   console.log(e);
+//   e.returnValue = '';
+// });
