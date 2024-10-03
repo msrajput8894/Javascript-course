@@ -58,7 +58,6 @@ console.log(mahendra.species, Aashu.species); // Homo Sapiens Homo Sapiens
 console.log(mahendra.hasOwnProperty('firstName')); // true
 console.log(mahendra.hasOwnProperty('species')); // false
 
-
 // Prototypal Inheritance on built in objects:
 
 console.log(mahendra.__proto__); // constructor functions prototype(Person.prototype)
@@ -94,7 +93,7 @@ console.log(arr2.unique()); // [2, 4, 6]
 
 // Note: we just extended the prototype of a built-in object, however this is not good idea.
 
-// The reason is Javascript may add this method that you created in next versions, and it might work differently, then your code will start using that method if the name is same, and it might cause your code to break.
+// The reason is Javascript may add this method that you created in next versions, and it might work differently, then your code will start using that method if the name is same, and it might cause your code to brake.
 
 // another reason is if you are working in a team, then other developers also create the method with same name but has different functionality then, that is going cause lot of bugs in the code.
 
@@ -105,3 +104,67 @@ console.dir(h1); // h1 ->[prototype]: HTMLHeadingElement -> [prototype]: HTMLEle
 console.dir(x => x + 1); // this is arrow function and it also has a prototype. which contains all the methods we use for functions such as call, bind, caller.. etc.
 
 // basically everything inside javascript is an object. and by using prototype we can access the various methods on them.
+
+/////////////////////////////////////
+
+// Coding Challenge:
+
+/* 
+  1. Use a constructor function to implement a Car. A car has a make and a speed property. The speed is the current speed of the car in km/h; 
+
+  2. Implement an 'accelerate' method that will increase the car's speed by 10, and log the new speed to console;
+
+  3. Implement a 'brake' method that will decrease the car's speed by 5, and log the new speed to the console;
+
+  4. Create 2 car objects and experiment with calling 'accelerate' and 'brake' multiple times on each of them.
+
+  DATA CAR 1: 'BMW' going at 120 km/h
+  DATA CAR 2: 'Mercedes' going at 95 km/h
+
+*/
+
+const Car = function (make, speed) {
+  this.speed = speed;
+  this.make = make;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.make} is going at ${this.speed} km/h`);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(`${this.make} is going at ${this.speed}`);
+};
+
+const bmw = new Car('BMW', 120);
+const mercedes = new Car('Mercedes', 95);
+
+// accelerating the BMW car
+console.log('-----------------BMW Accelerating----------------');
+bmw.accelerate(); // 130
+bmw.accelerate(); // 140
+bmw.accelerate(); // 150
+
+// braking the BMW car
+console.log('-----------------BMW braking-----------------');
+bmw.brake(); // 145
+bmw.brake(); // 140
+bmw.brake(); // 135
+
+// Accelerating the Mercedes Car
+console.log('-----------------Mercedes Accelerating----------');
+mercedes.accelerate(); // 105
+mercedes.accelerate(); // 115
+mercedes.accelerate(); // 125
+mercedes.accelerate(); // 135
+mercedes.accelerate(); // 145
+
+// brakeing the Mercedes Car
+console.log('-----------------Mercedes braking--------------');
+mercedes.brake(); // 140
+mercedes.brake(); // 135
+mercedes.brake(); // 130
+mercedes.brake(); // 125
+mercedes.brake(); // 120
