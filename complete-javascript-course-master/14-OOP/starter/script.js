@@ -57,3 +57,51 @@ console.log(mahendra.species, Aashu.species); // Homo Sapiens Homo Sapiens
 
 console.log(mahendra.hasOwnProperty('firstName')); // true
 console.log(mahendra.hasOwnProperty('species')); // false
+
+
+// Prototypal Inheritance on built in objects:
+
+console.log(mahendra.__proto__); // constructor functions prototype(Person.prototype)
+
+console.log(mahendra.__proto__.__proto__); // object.prototype
+
+console.log(mahendra.__proto__.__proto__.__proto__); // null, becuase object.prototype is at the top of prototype chain
+
+console.log(mahendra.__proto__.constructor); //Person constructor function
+console.dir(mahendra.__proto__.constructor); // Person contstructor function
+
+const arr = [3, 6, 9, 12, 15, 3, 9]; // new Array === []
+
+console.log(arr.__proto__); // Array.protype: it has all the methods that we normally use for array operations. such as flat, flatMap, concat, fill ... etc.
+
+console.log(arr.__proto__.__proto__); // Object.prototype, again we are back to top of the prototype chain, this as methods related to objects such as hasOwnProperty, isPropertyOf, toString ... etc.
+
+console.log(arr.__proto__.__proto__.__proto__); // null as we already reached at the top of prototype chain.
+
+// So as we know that Array has the prototype and we can add new methods to prototype so lets add new method.
+
+// lets say we need method to find unique values in an array.
+
+Array.prototype.unique = function () {
+  return [...new Set(this)];
+};
+
+console.log(arr.unique()); // [3, 6, 9, 12, 15]
+
+const arr2 = [2, 4, 6, 6, 4, 2];
+
+console.log(arr2.unique()); // [2, 4, 6]
+
+// Note: we just extended the prototype of a built-in object, however this is not good idea.
+
+// The reason is Javascript may add this method that you created in next versions, and it might work differently, then your code will start using that method if the name is same, and it might cause your code to break.
+
+// another reason is if you are working in a team, then other developers also create the method with same name but has different functionality then, that is going cause lot of bugs in the code.
+
+const h1 = document.querySelector('h1');
+
+console.dir(h1); // h1 ->[prototype]: HTMLHeadingElement -> [prototype]: HTMLElement -> [prototype]: Element -> [prototype]: Node -> [prototype]: Event Target -> [prototype]: Object
+
+console.dir(x => x + 1); // this is arrow function and it also has a prototype. which contains all the methods we use for functions such as call, bind, caller.. etc.
+
+// basically everything inside javascript is an object. and by using prototype we can access the various methods on them.
