@@ -1,5 +1,13 @@
 'use strict';
 
+// ways of implementing the prototypal inheritance in Javascript
+
+// 1. Constructor function
+// 2. ES6 Classes
+// 3. Object.create();
+
+/*
+// Constructor function
 const Person = function (firstName, lastName, birthYear, pin) {
   // Instance properties
   this.firstName = firstName;
@@ -105,6 +113,7 @@ console.dir(x => x + 1); // this is arrow function and it also has a prototype. 
 
 // basically everything inside javascript is an object. and by using prototype we can access the various methods on them.
 
+*/
 /////////////////////////////////////
 
 // Coding Challenge:
@@ -123,6 +132,7 @@ console.dir(x => x + 1); // this is arrow function and it also has a prototype. 
 
 */
 
+/*
 const Car = function (make, speed) {
   this.speed = speed;
   this.make = make;
@@ -168,3 +178,59 @@ mercedes.brake(); // 135
 mercedes.brake(); // 130
 mercedes.brake(); // 125
 mercedes.brake(); // 120
+
+*/
+
+//////////////////////////////////
+
+// 2. ES6 Classes:
+
+// Classes are basically like functions, the ES6 Classes basically works like constructor function. they don't behave like traditional classes
+
+// As the classes are like functions, we can write them in two ways, class declaration and class expression
+
+// class expression:
+// const PersonCl = class {}
+
+// Class Declaration:
+class PersonCl {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  // Methods will be added to .prototype property
+  calcAge() {
+    console.log(2024 - this.birthYear);
+  }
+
+  sayHello() {
+    console.log(`Hello ${this.firstName}`);
+  }
+}
+
+const anand = new PersonCl('Anand', 2000);
+console.log(anand);
+
+anand.calcAge(); // 24
+
+anand.sayHello(); // Hello Anand
+
+console.log(anand.__proto__ === PersonCl.prototype); // true
+
+// we can even set the method externally to prototype for ES6 class.
+PersonCl.prototype.greet = function () {
+  console.log(`Hey ${this.firstName}`);
+};
+
+anand.greet();
+
+// 1. Classes are not hoisted, so we cannot use them before they are declared in the code.
+
+// 2. Classes are also first-class citizens. that means we can pass them into function and we can return them from function.
+
+// 3. Classes are executed in strict mode.
+
+// which one should we use? function constructor or ES6 Classes?
+
+// the answer for the above question is it depends on personal choice, to make our code readable and to keep it neat and clean we should use ES6 classes. as we can write the methods inside the class.
