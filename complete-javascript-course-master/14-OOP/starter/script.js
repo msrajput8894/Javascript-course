@@ -234,3 +234,76 @@ anand.greet();
 // which one should we use? function constructor or ES6 Classes?
 
 // the answer for the above question is it depends on personal choice, to make our code readable and to keep it neat and clean we should use ES6 classes. as we can write the methods inside the class.
+
+/////////////////////////////////////////////////////////////////////
+
+// Setters and Getters In javascript:
+
+// 1. Every object is javascript has setter and getter properties.
+
+// 2. We call these special properties as assesor properties, while all other normal properties are called data properties.
+
+// 3. Getter and Setter are basically functions that get and set a value.
+
+// 4. As we know every object in javascript has getter and setter properties, in the same way classes also have the getter and setter properties.
+
+// Lets first see the getter and setter properties on Objects:
+
+const account = {
+  accountHolderName: 'Mahendra Rajput',
+  accountNumber: '1234567890',
+  branchName: 'BOB Neri',
+  birthDate: '17/01/1999',
+  idNo: '11223344',
+  transactions: [200, 5000, 500, 20, 10000, 300],
+
+  get latest() {
+    return this.transactions.slice(-1).pop();
+  },
+
+  set latest(trans) {
+    this.transactions.push(trans);
+  },
+};
+
+account.latest = 50;
+console.log(account.transactions); // [200, 5000, 500, 20, 10000, 300, 50]
+
+console.log(account.latest); // 50
+
+// Setter and Getter on Classes:
+
+class User {
+  constructor(fullName, userName, password, birthYear) {
+    this.fullName = fullName;
+    this.userName = userName;
+    this.password = password;
+    this.birthYear = birthYear;
+  }
+
+  get age() {
+    return 2024 - this.birthYear;
+  }
+
+  set fullName(name){
+    if(name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not a full name!`)
+  }
+
+  get fullName(){
+    return this._fullName;
+  }
+}
+
+const ashwini = new User('Ashwini Rajput', 'Aashu_1727', 'Akshu@1727', 2004);
+
+console.log(ashwini);
+
+console.log(ashwini.age);
+
+ashwini.fullName = 'Ashwini Mahendrasing Rajput'; // this will set the fullName property to Ashwini Mahendrasing Rajput
+
+console.log(ashwini.fullName) 
+
+const mahi = new User('mahi', 'mahi1727', 'pass123', 1999);
+console.log(mahi)
