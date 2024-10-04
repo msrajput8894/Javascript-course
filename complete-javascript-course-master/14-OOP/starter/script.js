@@ -6,7 +6,6 @@
 // 2. ES6 Classes
 // 3. Object.create();
 
-/*
 // Constructor function
 const Person = function (firstName, lastName, birthYear, pin) {
   // Instance properties
@@ -22,6 +21,7 @@ const Person = function (firstName, lastName, birthYear, pin) {
 };
 
 const mahendra = new Person('Mahendra', 'Rajput', 1999, 1111);
+const aashu = new Person('Aashu', 'Rajput', 2004, 2222);
 console.log(mahendra);
 
 // 1. New {} is created
@@ -36,6 +36,7 @@ console.log(Aashu, Aruna);
 
 console.log(mahendra instanceof Person); // true
 
+/*
 // Prototypes
 
 console.log(Person.prototype);
@@ -285,12 +286,12 @@ class User {
     return 2024 - this.birthYear;
   }
 
-  set fullName(name){
-    if(name.includes(' ')) this._fullName = name;
-    else alert(`${name} is not a full name!`)
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    // else alert(`${name} is not a full name!`);
   }
 
-  get fullName(){
+  get fullName() {
     return this._fullName;
   }
 }
@@ -303,7 +304,58 @@ console.log(ashwini.age);
 
 ashwini.fullName = 'Ashwini Mahendrasing Rajput'; // this will set the fullName property to Ashwini Mahendrasing Rajput
 
-console.log(ashwini.fullName) 
+console.log(ashwini.fullName);
 
 const mahi = new User('mahi', 'mahi1727', 'pass123', 1999);
-console.log(mahi)
+console.log(mahi);
+
+// Static methods:
+
+// Static methods are basically helper methods.
+
+// Static methods on constructor function:
+
+const Account = function (accountHolder, accountNum, pin) {
+  this.accountHolder = accountHolder;
+  this.accountNum = accountNum;
+  this.pin = pin;
+
+  Account.welcome = function () {
+    console.log('Welcome to BOB...🤝');
+  };
+};
+
+const acc = new Account('Mahendra Rajput', '12344567890', 1111);
+Account.welcome();
+
+// acc.welcome(); // this will give error, as welcome is static method attched to Account constructor function.
+
+///////////////////////////
+
+// Static Method on Class:
+
+class AccountCl {
+  constructor(accountHolder, accountNum, pin, birthYear) {
+    this.accountHolder = accountHolder;
+    this.accountNum = accountNum;
+    this.pin = pin;
+    this.birthYear = birthYear;
+  }
+
+  //Instance method
+  calcAge() {
+    return 2024 - this.birthYear;
+  }
+
+  // static method
+  static welcome() {
+    console.log('Welcome to BOB...🤝');
+  }
+}
+
+const accCl = new AccountCl('Ashwini Rajput', '1234567891', 2222, 2004);
+
+AccountCl.welcome(); // Welcome to BOB...🤝
+// accCl.welcome(); // ERROR as the welcome method is attached to AccountCl class, not to objects created using that class.
+
+console.log(accCl.calcAge());
