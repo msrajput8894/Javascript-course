@@ -6,6 +6,7 @@
 // 2. ES6 Classes
 // 3. Object.create();
 
+/*
 // Constructor function
 const Person = function (firstName, lastName, birthYear, pin) {
   // Instance properties
@@ -35,6 +36,7 @@ const Aruna = new Person('Aruna', 'Rajput', 1974, 3333);
 console.log(Aashu, Aruna);
 
 console.log(mahendra instanceof Person); // true
+*/
 
 /*
 // Prototypes
@@ -190,6 +192,7 @@ mercedes.brake(); // 120
 
 // As the classes are like functions, we can write them in two ways, class declaration and class expression
 
+/*
 // class expression:
 // const PersonCl = class {}
 
@@ -249,6 +252,8 @@ anand.greet();
 // 4. As we know every object in javascript has getter and setter properties, in the same way classes also have the getter and setter properties.
 
 // Lets first see the getter and setter properties on Objects:
+
+*/
 
 /*
 const account = {
@@ -365,6 +370,7 @@ console.log(accCl.calcAge());
 
 ////////////////////////////////
 
+/*
 // Object.create():
 
 const PersonProto = {
@@ -403,6 +409,8 @@ gunjan.calcAge();
 
 console.log(naitik);
 
+
+*/
 /////////////////////////////////////
 
 // Coding challenge #2
@@ -420,6 +428,7 @@ console.log(naitik);
   DATA CAR 1: 'FORD' going at 120 km/h
 */
 
+/*
 class Car {
   constructor(make, speed) {
     this.make = make;
@@ -464,3 +473,55 @@ console.log(ford);
 ford.accelerate();
 console.log(ford);
 console.log(ford.speedUS);
+
+*/
+
+/////////////////////////////////////////////////
+
+// Inheritance on Constructor function:
+
+//Parent constructor function:
+const Person = function (firstName, birthYear) {
+  this.firstName = firstName;
+  this.birthYear = birthYear;
+};
+
+// setting method using prototype on parent constructor function
+Person.prototype.calcAge = function () {
+  console.log(2024 - this.birthYear);
+};
+
+// Child class
+const Student = function (firstName, birthYear, course) {
+  Person.call(this, firstName, birthYear); // inheriting firstname and birthYear from Person(parent)
+  this.course = course;
+};
+
+// in order to link the prototype of Student constructor function to Person constructor function we need to use Object.create();
+
+// Linking protypes:
+Student.prototype = Object.create(Person.prototype); // now by doing this we have linked the Person.prototype to Student's prototype. now we can have access to methods and properties from Person's prototype.
+
+Student.prototype.introduce = function () {
+  console.log(`Hi, I am ${this.firstName} and I study ${this.course}`);
+};
+
+const gunjan = new Student('Gunjan', 2019, 'Nursery');
+console.log(gunjan);
+
+gunjan.introduce(); // Hi, I am Gunjan and I study Nursery
+gunjan.calcAge(); // 5
+
+console.log(gunjan.__proto__);
+console.log(gunjan.__proto__.__proto__);
+
+console.log(gunjan instanceof Student); // true
+console.log(gunjan instanceof Person); // true
+console.log(gunjan instanceof Object); // true
+
+// so here gunjan is basically instance of three protypes because of the prototype chain.
+
+console.dir(Student.prototype.constructor); // Person, where it should be Student actually. so lets correct that.
+
+Student.prototype.constructor = Student;
+console.dir(Student.prototype.constructor); // Student. Now it is correct!
