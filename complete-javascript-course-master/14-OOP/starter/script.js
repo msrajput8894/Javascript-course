@@ -250,6 +250,7 @@ anand.greet();
 
 // Lets first see the getter and setter properties on Objects:
 
+/*
 const account = {
   accountHolderName: 'Mahendra Rajput',
   accountNumber: '1234567890',
@@ -359,3 +360,45 @@ AccountCl.welcome(); // Welcome to BOB...🤝
 // accCl.welcome(); // ERROR as the welcome method is attached to AccountCl class, not to objects created using that class.
 
 console.log(accCl.calcAge());
+
+*/
+
+////////////////////////////////
+
+// Object.create():
+
+const PersonProto = {
+  calcAge() {
+    console.log(2024 - this.birthYear);
+  },
+
+  // this is not actual constructor function. although looks like it
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const naitik = Object.create(PersonProto);
+
+console.log(naitik);
+
+naitik.name = 'Naitik';
+naitik.birthYear = 2022;
+
+naitik.calcAge();
+
+// here we have created one prototype object which is PersonProto, and we linked newly created object naitik to that prototype object hence now naitik object has access to caclAge method which is defined in PersonProto object.
+
+console.log(naitik.__proto__); // PersonProto object
+
+console.log(naitik.__proto__.__proto__); // object
+
+console.log(naitik.__proto__.__proto__.__proto__); // null
+
+const gunjan = Object.create(PersonProto);
+
+gunjan.init('Gunjan', 2019);
+gunjan.calcAge();
+
+console.log(naitik);
