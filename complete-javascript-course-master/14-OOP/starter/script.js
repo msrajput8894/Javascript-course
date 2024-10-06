@@ -529,7 +529,7 @@ console.dir(Student.prototype.constructor); // Student. Now it is correct!
 */
 ///////////////////////////////////////////////
 
-// Coding Challenge:
+// Coding Challenge #3:
 
 /*
 1. Use a constructor function to implement an Electric Car (called EV) as child class of Car. Besides make and current speed , the EV also has the current battery charge in % ('charge' property);
@@ -781,8 +781,8 @@ console.log(acc1.movements); // now we will not get the movements array as we ha
 // 4) Private methods
 
 // there are also static method versions of this private and public fields and methods
-
-// Another class example
+/*
+// Encapsulation (private and public fields and methods)
 class Account {
   // 1) Public fields(instances)
   locale = navigator.language;
@@ -863,3 +863,133 @@ acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
 console.log(acc1.getMovements);
 
 console.log(acc1.getMovements());
+
+console.log(acc1);
+
+*/
+/////////////////////////////////
+
+// Coding challenge
+
+/* 
+1. Re-create challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+2. Make the 'charge' property private;
+3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. They experiment with chining!
+
+DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+GOOD LUCK 😀
+*/
+
+class CarCl {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed += 10;
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+  }
+
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.make} is going at ${this.speed} km/h`);
+  }
+}
+
+const ferrari = new CarCl('Ferrari', 150);
+
+ferrari.accelerate();
+ferrari.accelerate();
+ferrari.brake();
+
+class EVCl extends CarCl {
+  #charge;
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    return (this.#charge = chargeTo);
+  }
+
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(
+      `${this.make} is going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+}
+
+const rivian = new EVCl('Rivian', 120, 23);
+
+rivian.accelerate().chargeBattery(50);
+console.log(rivian);
+
+rivian.brake();
+
+/*
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.accelerate = function () {
+  this.speed += 10;
+  console.log(`${this.make} is going at ${this.speed}`);
+};
+
+Car.prototype.brake = function () {
+  this.speed -= 5;
+  console.log(`${this.make} is going at ${this.speed}`);
+};
+
+const ford = new Car('Ford', 120);
+
+ford.accelerate();
+ford.brake();
+
+const EV = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+// this will link the prototypes of parent(Car) and child(EV)
+EV.prototype = Object.create(Car.prototype);
+
+EV.prototype.chargeBattery = function (chargeTo) {
+  return (this.charge = chargeTo);
+};
+
+const tesla = new EV('Tesla', 140, 23);
+
+console.log(tesla);
+
+tesla.chargeBattery(45);
+console.log(tesla);
+
+tesla.accelerate();
+tesla.brake();
+
+EV.prototype.accelerate = function () {
+  this.speed += 20;
+  this.charge--;
+  console.log(
+    `${this.make} is going at ${this.speed} km/h, with a charge of ${this.charge}%`
+  );
+};
+
+// Now as we have overwritten the accelerate method, now the child(EV) will use the first method in prototype chain, which is currently on child(EV).
+tesla.accelerate();
+tesla.accelerate();
+tesla.accelerate();
+tesla.accelerate();
+
+
+*/
