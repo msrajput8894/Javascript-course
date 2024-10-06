@@ -809,10 +809,12 @@ class Account {
 
   deposit(val) {
     this.#movements.push(val);
+    return this;
   }
 
   withdraw(val) {
     this.#movements.push(-val);
+    return this;
   }
 
   requestLoan(val) {
@@ -820,6 +822,7 @@ class Account {
       this.deposit(val);
       console.log(`Congrats!! Your Loan request is approved!`);
     }
+    return this;
   }
 
   getPin() {
@@ -852,3 +855,11 @@ console.log(acc1.getMovements());
 
 // console.log(#approveLoan(100)); // private method can't access it outside of the class
 console.log(acc1.getPin());
+
+// Chaining methods:
+
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+
+console.log(acc1.getMovements);
+
+console.log(acc1.getMovements());
