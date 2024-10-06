@@ -477,7 +477,7 @@ console.log(ford.speedUS);
 */
 
 /////////////////////////////////////////////////
-
+/*
 // Inheritance on Constructor function:
 
 //Parent constructor function:
@@ -526,6 +526,7 @@ console.dir(Student.prototype.constructor); // Person, where it should be Studen
 Student.prototype.constructor = Student;
 console.dir(Student.prototype.constructor); // Student. Now it is correct!
 
+*/
 ///////////////////////////////////////////////
 
 // Coding Challenge:
@@ -542,6 +543,8 @@ console.dir(Student.prototype.constructor); // Student. Now it is correct!
 DATA CAR 1: 'Tesla' going at 120 km/h, with a charge of 23%
 
 */
+
+/*
 
 const Car = function (make, speed) {
   this.make = make;
@@ -598,3 +601,71 @@ tesla.accelerate();
 tesla.accelerate();
 tesla.accelerate();
 tesla.accelerate();
+
+*/
+
+////////////////////////////////////////
+
+// Inheritance with ES6 classes
+
+class PersonCl {
+  constructor(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  }
+
+  // Instance methods
+  calcAge() {
+    console.log(2024 - this.birthYear);
+  }
+
+  greet() {
+    console.log(`Hey ${this.fullName}`);
+  }
+
+  get age() {
+    return 2024 - this.birthYear;
+  }
+
+  set fullName(name) {
+    if (name.includes(' ')) this._fullName = name;
+    else alert(`${name} is not full name!`);
+  }
+
+  get fullName() {
+    return this._fullName;
+  }
+
+  //Static method:
+  static hey() {
+    console.log('Hey there 🙋‍♂️');
+  }
+}
+
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    // Always needs to happen first!
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this.fullName} and I study ${this.course}`);
+  }
+
+  calcAge() {
+    console.log(
+      `I'm ${
+        2024 - this.birthYear
+      } years old, but as a student I feel more like ${
+        2024 - this.birthYear + 10
+      }`
+    );
+  }
+}
+
+const gunjan = new StudentCl('Gunjan Rajput', 2019, 'Nursery');
+
+console.log(gunjan);
+gunjan.introduce(); // My name is Gunjan Rajput and study Nursery
+gunjan.calcAge(); // I'm 5 years old, but as a student I feel more like 15.
