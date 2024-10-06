@@ -606,6 +606,7 @@ tesla.accelerate();
 
 ////////////////////////////////////////
 
+/*
 // Inheritance with ES6 classes
 
 class PersonCl {
@@ -669,3 +670,41 @@ const gunjan = new StudentCl('Gunjan Rajput', 2019, 'Nursery');
 console.log(gunjan);
 gunjan.introduce(); // My name is Gunjan Rajput and study Nursery
 gunjan.calcAge(); // I'm 5 years old, but as a student I feel more like 15.
+
+
+*/
+
+////////////////////////////////
+
+// Inheritance Between "Classes": Object.create()
+
+const PersonProto = {
+  calcAge() {
+    console.log(2024 - this.birthYear);
+  },
+
+  init(fullName, birthYear) {
+    this.fullName = fullName;
+    this.birthYear = birthYear;
+  },
+};
+
+const jaypal = Object.create(PersonProto);
+
+const StudentProto = Object.create(PersonProto);
+const gunjan = Object.create(StudentProto);
+
+StudentProto.init = function (firstName, birthYear, course) {
+  PersonProto.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentProto.introduce = function () {
+  console.log(`Hi my name is ${this.fullName} and I study ${this.course}`);
+};
+
+gunjan.init('Gunjan Rajput', 2019, 'Nursery');
+
+gunjan.introduce();
+
+gunjan.calcAge();
