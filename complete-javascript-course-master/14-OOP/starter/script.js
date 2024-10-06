@@ -676,6 +676,7 @@ gunjan.calcAge(); // I'm 5 years old, but as a student I feel more like 15.
 
 ////////////////////////////////
 
+/*
 // Inheritance Between "Classes": Object.create()
 
 const PersonProto = {
@@ -708,3 +709,146 @@ gunjan.init('Gunjan Rajput', 2019, 'Nursery');
 gunjan.introduce();
 
 gunjan.calcAge();
+
+*/
+
+/*
+// Another class example
+class Account {
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this._pin = pin;
+    this._movements = [];
+    this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${this.owner}`);
+  }
+
+  // Public Interface:
+  getMovements() {
+    return this._movements;
+  }
+
+  deposit(val) {
+    this._movements.push(val);
+  }
+
+  withdraw(val) {
+    this._movements.push(-val);
+  }
+
+  _approveLoan(val) {
+    return true;
+  }
+
+  requestLoan(val) {
+    if (this._approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Congrats!! Your Loan request is approved!`);
+    }
+  }
+}
+
+const acc1 = new Account('Mahendra', 'INR', 1111);
+
+// acc1.movements.push(250);
+acc1.deposit(250);
+acc1.deposit(5000);
+acc1.withdraw(250);
+
+acc1.requestLoan(10000);
+acc1._approveLoan(4); // this actually does not have application outside of the class hence we should not be able to access such methods outside of the class, and even we should not be able change some properties outside of the class. We can achieve that using encapsulation.
+
+console.log(acc1);
+
+// Encapsulation: means keeping some properties and methods private inside the class.
+
+// In javascript we don't really have the private keyword so we follow the conventions just so that we are aware that we don't have to change some properties. we just add (_) infront of those properties and methods.
+
+console.log(acc1.movements); // now we will not get the movements array as we have added _ at the front, but ofcourse you can access it by doing acc1._movements. but at least we are aware that we are not supposed to access it.
+
+
+*/
+
+////////////////////////////////////////////
+
+// Private Class fields
+
+// 1) Public fields
+// 2) Private fields
+// 3) Public methods
+// 4) Private methods
+
+// there are also static method versions of this private and public fields and methods
+
+// Another class example
+class Account {
+  // 1) Public fields(instances)
+  locale = navigator.language;
+
+  // 2) Private fields(instances)
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.#pin = pin;
+    // this._movements = [];
+    // this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${this.owner}`);
+  }
+
+  // 3) public methods:
+  // Public Interface:
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+  }
+
+  withdraw(val) {
+    this.#movements.push(-val);
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log(`Congrats!! Your Loan request is approved!`);
+    }
+  }
+
+  getPin() {
+    return this.#pin;
+  }
+
+  // 4) Private Methods
+  #approveLoan(val) {
+    return true;
+  }
+}
+
+const acc1 = new Account('Mahendra', 'INR', 1111);
+
+console.log(acc1);
+
+acc1.deposit(500);
+acc1.deposit(300);
+acc1.deposit(200);
+console.log(acc1);
+
+// console.log(acc1.#movements); // we cannot access the #movements outside as it is private property.
+
+console.log(acc1.getMovements());
+
+// console.log(acc1.#pin); // private field, not able to access outside
+
+acc1.requestLoan(5000);
+console.log(acc1.getMovements());
+
+// console.log(#approveLoan(100)); // private method can't access it outside of the class
+console.log(acc1.getPin());
