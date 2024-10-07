@@ -895,6 +895,7 @@ class CarCl {
   brake() {
     this.speed -= 5;
     console.log(`${this.make} is going at ${this.speed} km/h`);
+    return this;
   }
 }
 
@@ -929,8 +930,9 @@ class EVCl extends CarCl {
 
 const rivian = new EVCl('Rivian', 120, 23);
 
-rivian.accelerate().chargeBattery(50);
-rivian.chargeBattery(60);
+rivian.accelerate().accelerate().accelerate().brake().chargeBattery(50);
+
+// rivian.chargeBattery(60);
 console.log(rivian);
 rivian.accelerate();
 rivian.accelerate();
