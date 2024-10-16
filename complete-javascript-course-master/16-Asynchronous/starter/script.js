@@ -144,18 +144,62 @@ getCountryAndNeighbour('usa');
 //       renderCountry(data[1]);
 //     });
 // };
+
+// const getCountryData = function (country) {
+//   // country 1
+//   fetch(`https://restcountries.com/v2/name/${country}`)
+//     .then(response => {
+//       if (!response.ok) throw new Error(`Country not found ${response.status}`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       renderCountry(data[0]);
+//       // const neighbour = data[0].borders?.[0];
+//       const neighbour = 'adfahls';
+
+//       //country 2
+//       return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+//     })
+//     .then(response => response.json())
+//     .then(data => renderCountry(data, 'neighbour'))
+//     .catch(err => {
+//       console.error(`${err}...😕😕😕`);
+//       renderError(`Something went wrong...😕😕 ${err.message}. Try again!`);
+//     })
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
+// getCountryData('pakistan');
+// getCountryData('bangladesh');
+
+// so now the data is not readable and in order to read the data we need to call json() method on the response and json method itself returns new promise so in order to handle that promise we need again have to use .then on that.
+
+// HANDLING THE REJECTED PROMISES:
+
+const getJSON = function (url, errMsg = 'Something went wrong!') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errMsg} (${response.status})`);
+    return response.json();
+  });
+};
+
 const getCountryData = function (country) {
   // country 1
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => response.json())
+
+  getJSON(`https://restcountries.com/v2/name/${country}`, 'Country not found')
     .then(data => {
       renderCountry(data[0]);
       const neighbour = data[0].borders?.[0];
-
+      // const neighbour = 'adfahls';
+      if (!neighbour) throw new Error('No neighbour found!');
       //country 2
-      return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+      return getJSON(
+        `https://restcountries.com/v2/alpha/${neighbour}`,
+        'Country not found'
+      );
     })
-    .then(response => response.json())
     .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
       console.error(`${err}...😕😕😕`);
@@ -166,13 +210,8 @@ const getCountryData = function (country) {
     });
 };
 
-// getCountryData('pakistan');
-// getCountryData('bangladesh');
-
-// so now the data is not readable and in order to read the data we need to call json() method on the response and json method itself returns new promise so in order to handle that promise we need again have to use .then on that.
-
-// HANDLING THE REJECTED PROMISES:
-
 btn.addEventListener('click', function () {
   getCountryData('usa');
 });
+
+getCountryData('bharat');
