@@ -21,12 +21,12 @@ const renderCountry = function (data, className = '') {
       `;
 
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  //   countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  //   countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 ///////////////////////////////////////
@@ -243,6 +243,7 @@ TEST COORDINATES 2: -33.933, 18.474
 GOOD LUCK 😀
 */
 
+/*
 const whereAmI = function (lat, lng) {
   fetch(
     `https://geocode.xyz/${lat},${lng}?geoit=json&auth=638967179904283397648x21126`
@@ -270,7 +271,7 @@ const whereAmI = function (lat, lng) {
       console.log(data);
 
       renderCountry(data[1]);
-      countriesContainer.style.opacity = 1;
+      // countriesContainer.style.opacity = 1;
     })
     .catch(err => {
       console.log(`Something went wrong!! ${err.message}`);
@@ -294,3 +295,53 @@ if ('geolocation' in navigator) {
 }
 
 // whereAmI(18.4832, 73.8154);
+
+*/
+
+/*
+// Asynchronous behind the scenes
+
+// As we know Javascript engine consist Callstack, Heap, event loop and in addition to that it also consist callback queue and microtask queue.
+
+// for synchronous code it will be directly moved to callstack, however if there is asynchronous code, like timer then or image loading it will be loaded in browser engine and then it will be moved to callback queue. and once the callstack is empty event loop will pick it up and put it inside callstack.
+
+// however for promises, fetch apis it will wait for data to laod, once the data is loaded then it will be moved to microtask queue. and then event loop will pick it up and put it inside callstack when it is empty.
+
+// the difference between callback queue and microtask queue is that the microtask queue has higher priority than that of the callback queue.
+console.log('Test start');
+setTimeout(() => console.log('0 sec timer'), 0);
+Promise.resolve('Resolved promise 1').then(response => console.log(response));
+
+console.log('Test End');
+
+// Order of execution
+
+// 'Test start'
+// 'Test End'
+// 'Resolved promise 1'
+// '0 sec timer'
+
+// as we can see that order of execution changed here, becuase synchronous code was executed first, then after that the code inside microtask queue was executed which is resolved promise and after that the code inside callback queue was executed which 0 sec timer
+
+
+*/
+
+// Building our own promises
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('Lottery draw is happening...🔮');
+
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You win...💰');
+    } else {
+      reject('You lost your Money...🙄');
+    }
+  }, 3000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+
+// Promisifying setTimeout
+
