@@ -459,6 +459,7 @@ createImage('img/img-1.jpg')
   */
 // Async / Await:
 
+/*
 const getPostion = function () {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -521,3 +522,84 @@ const whereAmI = async function () {
   }
   console.log('3: finished getting location data');
 })();
+
+*/
+
+const getJSON = function (url, errMsg = 'Something went wrong!') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errMsg} (${response.status})`);
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  // const [data1] = await getJSON(`https://restcountries.com/v2/name/${c1}`);
+  // const [data2] = await getJSON(`https://restcountries.com/v2/name/${c2}`);
+  // const [data3] = await getJSON(`https://restcountries.com/v2/name/${c3}`);
+
+  // console.log([data1.capital, data2.capital, data3.capital]);
+
+  // Here all three fetch calls are independant they do not depend on each other so we can make all three calls at the same time instead of waiting for each one of them to complete.
+  const data = await Promise.all([
+    getJSON(`https://restcountries.com/v2/name/${c1}`),
+    getJSON(`https://restcountries.com/v2/name/${c2}`),
+    getJSON(`https://restcountries.com/v2/name/${c3}`),
+  ]);
+
+  console.log(data);
+  console.log(data.map(d => d[0].capital));
+};
+
+get3Countries('portugal', 'usa', 'canada');
+
+// Promise.race
+
+(async function () {
+  const res = await Promise.race([
+    getJSON(`https://restcountries.com/v2/name/bharat`),
+    getJSON(`https://restcountries.com/v2/name/pakistan`),
+    getJSON(`https://restcountries.com/v2/name/china`),
+  ]);
+  console.log(res[0]);
+})();
+
+const timeout = function (seconds) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error('Request timed out!'));
+    }, seconds * 1000);
+  });
+};
+
+Promise.race([getJSON(`https://restcountries.com/v2/name/bharat`), timeout(2)])
+  .then(res => console.log(res[0]))
+  .catch(error => console.error(error));
+
+// Promise.allSettled
+
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another Success'),
+]).then(res => console.log(res));
+
+// Promise.all
+Promise.all([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another Success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+
+Promise.any([
+  Promise.reject('ERROR'),
+  Promise.resolve('Success'),
+  Promise.resolve('Another Success'),
+])
+  .then(res => console.log(res))
+  .catch(error => console.error('All Promises were rejected!', error));
+
+
+
+  
