@@ -79,3 +79,29 @@ shoppingCart2.addToCart('bread', 8);
 shoppingCart2.addToCart('pizza', 4);
 console.log(shoppingCart2.cart);
 console.log(shoppingCart2);
+
+const state = {
+  cart: [
+    { product: 'bread', quantity: 5 },
+    { product: 'pizza', quantity: 2 },
+  ],
+
+  user: { isLoggedIn: true },
+};
+
+const cloneState = Object.assign({}, state);
+const stateDeepClone = cloneDeep(state);
+
+console.log(cloneState);
+console.log(state);
+
+cloneState.user.isLoggedIn = false;
+
+// this is the problem with cloning the object using Object.assign the original object also changes
+console.log(state);
+console.log(cloneState);
+console.log(stateDeepClone);
+
+// lets use external function from lodash library
+
+import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
