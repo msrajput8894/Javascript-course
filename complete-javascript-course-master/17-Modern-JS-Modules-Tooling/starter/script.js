@@ -19,8 +19,8 @@
 // console.log(ShoppingCart.totalPrice);
 
 // importing default exports
-import add, { cart } from './shoppingCart.js';
-
+// import add, { addToCart, cart } from './shoppingCart.js';
+/*
 add('banana', 4);
 add('bread', 5);
 add('apples', 4);
@@ -50,4 +50,32 @@ console.log(lastPost);
 
 // Note: Use top level await with care, it can block the code execution of an entire module.
 
+*/
 
+const shoppingCart2 = (function () {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+  };
+
+  const orderStock = function (product, quantity) {
+    console.log(`${quantity} of ${product} ordered from supplier`);
+  };
+
+  return {
+    cart,
+    addToCart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+shoppingCart2.addToCart('bread', 8);
+shoppingCart2.addToCart('pizza', 4);
+console.log(shoppingCart2.cart);
+console.log(shoppingCart2);
