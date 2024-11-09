@@ -29,3 +29,25 @@ console.log(cart);
 
 // imports are not copies of the exports they are instead like a live connection. which points to same location in the memory.
 
+// TOP LEVEL AWAIT: now we can use await keyword outside of an async function atleast in the modules.
+
+// console.log('Start fetching');
+// const res = await fetch('https://jsonplaceholder.typicode.com/users');
+// const data = await res.json();
+// console.log(data);
+
+// console.log('Something');
+
+const getLastPost = async function () {
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const data = await res.json();
+
+  return { title: data.at(-1).title, text: data.at(-1).body };
+};
+
+const lastPost = await getLastPost();
+console.log(lastPost);
+
+// Note: Use top level await with care, it can block the code execution of an entire module.
+
+
