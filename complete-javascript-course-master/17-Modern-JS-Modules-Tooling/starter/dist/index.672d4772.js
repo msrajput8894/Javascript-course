@@ -1,25 +1,17 @@
 // Importing Modules
 // import { addToCart, totalPrice as price, tq } from './shoppingCart.js';
-
 // console.log('Importing Modules');
-
 // // Exports are hoisted at the top of the script.
 // // hence first "Exporting Modules" will be printed in the console and then "Importing Modules" will be printed.
-
 // // console.log(shippingCost);
-
 // addToCart('bread', 5);
-
 // console.log(price, tq);
-
 // importing everything from a module
 // import * as ShoppingCart from './shoppingCart.js';
-
 // ShoppingCart.addToCart('bread', 10);
 // console.log(ShoppingCart.totalPrice);
-
 // importing default exports
-import add, { addToCart, cart } from './shoppingCart.js';
+// import add, { addToCart, cart } from './shoppingCart.js';
 /*
 add('banana', 4);
 add('bread', 5);
@@ -50,87 +42,70 @@ console.log(lastPost);
 
 // Note: Use top level await with care, it can block the code execution of an entire module.
 
-*/
-
-const shoppingCart2 = (function () {
-  const cart = [];
-  const shippingCost = 10;
-  const totalPrice = 237;
-  const totalQuantity = 23;
-
-  const addToCart = function (product, quantity) {
-    cart.push({ product, quantity });
-    console.log(`${quantity} ${product} added to cart`);
-  };
-
-  const orderStock = function (product, quantity) {
-    console.log(`${quantity} of ${product} ordered from supplier`);
-  };
-
-  return {
-    cart,
-    addToCart,
-    totalPrice,
-    totalQuantity,
-  };
-})();
-
-shoppingCart2.addToCart('bread', 8);
-shoppingCart2.addToCart('pizza', 4);
+*/ const shoppingCart2 = function() {
+    const cart1 = [];
+    const shippingCost = 10;
+    const totalPrice = 237;
+    const totalQuantity = 23;
+    const addToCart = function(product, quantity) {
+        cart1.push({
+            product,
+            quantity
+        });
+        console.log(`${quantity} ${product} added to cart`);
+    };
+    const orderStock = function(product, quantity) {
+        console.log(`${quantity} of ${product} ordered from supplier`);
+    };
+    return {
+        cart: cart1,
+        addToCart,
+        totalPrice,
+        totalQuantity
+    };
+}();
+shoppingCart2.addToCart("bread", 8);
+shoppingCart2.addToCart("pizza", 4);
 console.log(shoppingCart2.cart);
 console.log(shoppingCart2);
-
 const state = {
-  cart: [
-    { product: 'bread', quantity: 5 },
-    { product: 'pizza', quantity: 2 },
-  ],
-
-  user: { isLoggedIn: true },
+    cart: [
+        {
+            product: "bread",
+            quantity: 5
+        },
+        {
+            product: "pizza",
+            quantity: 2
+        }
+    ],
+    user: {
+        isLoggedIn: true
+    }
 };
-
 const cloneState = Object.assign({}, state);
 // const stateDeepClone = cloneDeep(state);
-
 console.log(cloneState);
 console.log(state);
-
 cloneState.user.isLoggedIn = false;
-
 // this is the problem with cloning the object using Object.assign the original object also changes
 console.log(state);
 console.log(cloneState);
 // console.log(stateDeepClone);
-
 // lets use external function from lodash library
-
 // import cloneDeep from 'lodash-es/cloneDeep';
-
-if (module.hot) {
-  module.hot.accept();
-}
-
+// if (module.hot) {
+//   module.hot.accept();
+// }
 class Person {
-  greeting = 'Hey';
-  constructor(name) {
-    this.name = name;
-    console.log(`${this.greeting}, ${this.name}`);
-  }
+    greeting = "Hey";
+    constructor(name){
+        this.name = name;
+        console.log(`${this.greeting}, ${this.name}`);
+    }
 }
+const mahi = new Person("Mahi");
+console.log("Mahendra" ?? null);
+console.log(cart.find((el)=>el.quantity >= 2));
 
-const mahi = new Person('Mahi');
-
-console.log('Mahendra' ?? null);
-console.log(cart);
-addToCart('bread', 4);
-addToCart('pizza', 2);
-addToCart('egg', 5);
-
-console.log(cart.find(el => el.quantity >= 2));
-
-Promise.resolve('TEST').then(x => console.log(x));
-
-import 'core-js/stable';
-
-// pollyfilling async functions
-import 'regenerator-runtime/runtime.js'
+//# sourceMappingURL=index.672d4772.js.map

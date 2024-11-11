@@ -1,0 +1,2 @@
+const o=function(){let o=[];return{cart:o,addToCart:function(t,a){o.push({product:t,quantity:a}),console.log(`${a} ${t} added to cart`)},totalPrice:237,totalQuantity:23}}();o.addToCart("bread",8),o.addToCart("pizza",4),console.log(o.cart),console.log(o);const t={cart:[{product:"bread",quantity:5},{product:"pizza",quantity:2}],user:{isLoggedIn:!0}},a=Object.assign({},t);console.log(a),console.log(t),a.user.isLoggedIn=!1,console.log(t),console.log(a),module.hot&&module.hot.accept();
+//# sourceMappingURL=index.6d563b6d.js.map
