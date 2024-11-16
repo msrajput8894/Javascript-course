@@ -1,5 +1,6 @@
 import { API_URL } from './config.js';
 import { getJSON } from './helpers.js';
+import recipeView from './views/recipeView.js';
 
 export const state = {
   recipe: {},
@@ -25,5 +26,6 @@ export const loadRecipe = async function (id) {
     console.log(state.recipe);
   } catch (error) {
     console.error(`${error}...😐😐😐`);
+    throw error;
   }
 };
