@@ -6,9 +6,9 @@ import paginationView from './views/paginationView.js';
 import 'core-js';
 import 'regenerator-runtime/runtime';
 
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }
 // https://forkify-api.herokuapp.com/v2
 
 ///////////////////////////////////////
