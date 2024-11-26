@@ -740,9 +740,14 @@ const controlAddBookmark = function() {
 const controlBookmarks = function() {
     (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
-const controlAddRecipe = function(newRecipe) {
-    console.log(newRecipe);
-// Upload new recipe data
+const controlAddRecipe = async function(newRecipe) {
+    try {
+        // Upload new recipe data
+        await _modelJs.uploadRecipe(newRecipe);
+    } catch (error) {
+        console.error("\uD83D\uDCA5\uD83D\uDCA5", error);
+        (0, _addRecipeViewJsDefault.default).renderError(error.message);
+    }
 };
 const init = function() {
     (0, _bookmarksViewJsDefault.default).addHandlerRender(controlBookmarks);
@@ -6270,6 +6275,7 @@ parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
 parcelHelpers.export(exports, "addBookmark", ()=>addBookmark);
 parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
+parcelHelpers.export(exports, "uploadRecipe", ()=>uploadRecipe);
 var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
 var _recipeViewJs = require("./views/recipeView.js");
@@ -6366,7 +6372,25 @@ init();
 // Just for development purpose
 const clearBookmarks = function() {
     localStorage.clear('bookmarks');
-}; //clearBookmarks()
+};
+const uploadRecipe = async function(newRecipe) {
+    try {
+        console.log(Object.entries(newRecipe));
+        const ingredients = Object.entries(newRecipe).filter((entry)=>entry[0].startsWith('ingredient') && entry[1] !== '').map((ing)=>{
+            const ingArr = ing[1].replaceAll(' ', '').split(',');
+            if (ingArr.length !== 3) throw new Error('Wrong ingredient format! Please use the correct format :)');
+            const [quantity, unit, description] = ingArr;
+            return {
+                quantity: quantity ? +quantity : null,
+                unit,
+                description
+            };
+        });
+        console.log(ingredients);
+    } catch (err) {
+        throw err;
+    }
+};
 
 },{"./config.js":"k5Hzs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./helpers.js":"hGI1E","./views/recipeView.js":"l60JC"}],"k5Hzs":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
